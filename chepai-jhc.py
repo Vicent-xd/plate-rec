@@ -19,9 +19,16 @@ def searchfolder(PATH="."):
             height=len(image)
             width=len(image[0])
             start=time.clock()
-            image=image[int(0.25*height):int(0.6*height),int(0.4*width):int(0.9*width)]#crop
+            #image=image[int(0.25*height):int(0.6*height),int(0.4*width):int(0.9*width)]#crop
+            #rotate
+            (h, w) = image.shape[:2] #10
+            center = (w // 2, h // 2) #11
+            M = cv2.getRotationMatrix2D(center, 12, 1.0) #逆时针旋转12度
+            rotated = cv2.warpAffine(image, M, (w, h)) 
+            #cv2.imshow("Rotated", rotated) #14
+            #cv2.waitKey(0)
             #识别结果
-            Result=HyperLPR_plate_recognition(image)
+            Result=HyperLPR_PlateRecogntion(rotated)
             elapsed = (time.clock() - start)
             if Result:
                 success+=1
@@ -37,7 +44,7 @@ def detImg(PATH="E:/JYdata/chepai/00010003378000000mp4/11.jpg"):
     #image = cv2.resize(image, (0, 0), fx=1.5, fy=1.5, interpolation=cv2.INTER_CUBIC)
     #cv2.imshow('1',image)
     #cv2.waitKey(0)
-    Result=HyperLPR_plate_recognition(image)
+    Result=HyperLPR_PlateRecogntion(image)
     print("Image Name:",PATH,"Result:",Result)
 
 #detImg()
